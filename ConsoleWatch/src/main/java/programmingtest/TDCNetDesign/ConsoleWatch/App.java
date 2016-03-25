@@ -8,6 +8,8 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Hello world!
@@ -18,12 +20,14 @@ public class App
 	private static int frequency=1; // 1/1000s
 	private static BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
 	private static Clock cl = Clock.systemUTC();
+	private static CommandClock cc = new CommandClock(cl); 
+	private static String input="";
 
 	public static void main( String[] args ) 
 	{ 
 
 		initFrequency();
-		run();
+		runProgram();
 	}
 
 	private static void setFrequency(int newTime) {
@@ -62,20 +66,79 @@ public class App
 		}
 	}
 
-	private static void run(){
-		CommandClock cc = new CommandClock(cl); 
+	private static void runProgram(){
+		//notifying the user of his options
+		printHelp();
 
-		int i; 
-		for(i=1; i<4; i++){ 
-			//update time + print
-			cc.printClock();
 
-			try {
-				Thread.sleep(frequency);
-			} catch (InterruptedException e) {
-				//  print out error if interrupted during sleep 
+
+		while(true){
+			try{
+				(new App()).timedInput();
+			} catch(Exception e){
 				e.printStackTrace();
 			}
+
 		} 
 	}
+
+	private void execute(String input){
+		if (input.equals("Q")){
+			//exit the program
+			System.out.println("Bye for now");
+			System.exit(0);
+		}
+		else if (input.equals("")){
+			//update + print
+			cc.printClock();
+		}
+		else if (input.equals("P")){
+			System.out.println("The system has been paused. Press [ENTER] to continue ...");
+			try{
+				//wait for input
+				bufferRead.readLine();
+			} catch (IOException e){
+				e.printStackTrace();
+			}
+		}
+		else if (input.equals("H")){
+			printHelp();
+		}
+	}
+
+	private static void printHelp() {
+		System.out.println("\n The avaiable commands are: \n h - Help \n p - Pause system \n q - Quit system \n"); 
+	}
+
+	private void timedInput(){
+		//create and start timer
+		Timer timer = new Timer();
+
+		//wait for input in freqyency 1/1000 seconds, if no input print time, else act on the input
+		timer.schedule(task,0,frequency);
+
+		try{
+			//Receive input from user
+			input = bufferRead.readLine();
+
+		} catch (IOException e){
+			e.printStackTrace();
+		}
+		timer.cancel();
+	}
+
+	TimerTask task = new TimerTask(){
+		public void run(){
+			//convert to upper case
+			input=input.toUpperCase();
+
+			//if the input are recognized
+			if(input.equals("") || input.equals("H") || input.equals("P") || input.equals("Q")){
+				execute(input);
+			}
+
+			//reset input
+			input="";
+		}
+	};
 }
