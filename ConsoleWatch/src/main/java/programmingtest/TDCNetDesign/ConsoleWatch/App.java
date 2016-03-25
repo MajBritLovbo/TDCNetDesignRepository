@@ -17,7 +17,8 @@ public class App
 {
 	private static int frequency=1; // 1/1000s
 	private static BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
-
+	private static Clock cl = Clock.systemUTC();
+	
 	public static void main( String[] args ) 
 	{ 
 		System.out.println("How often shall the program update time(in seconds) n"); 
@@ -36,8 +37,6 @@ public class App
 			e1.printStackTrace(); 
 		} 
 
-		// Define the clock
-		Clock cl=Clock.systemUTC(); 
 		CommandClock cc = new CommandClock(cl); 
 
 		int i; 
@@ -53,9 +52,18 @@ public class App
 			}
 		} 
 		System.out.println("The claim that it is a fun date today are " + cc.funDate() );
+		LocalDateTime tp = LocalDateTime.now().withDayOfMonth(12);
+		Clock newCl = Clock.fixed(tp.atZone(ZoneId.systemDefault()).toInstant(), ZoneId.systemDefault());
+		cc.printClock(newCl);
+		
+		
 	}
 
 	private static void setFrequency(int newTime) {
 		frequency=newTime*1000;		
 	} 
+	
+	private static void setClock(Clock clock){
+		cl=clock;
+	}
 }
