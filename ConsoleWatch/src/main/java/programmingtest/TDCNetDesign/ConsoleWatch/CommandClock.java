@@ -15,6 +15,9 @@ public class CommandClock {
 	} 
 
 	public void printClock(){
+		// Setting the new print time
+		updateLast_time();
+		
 		// Converting last_time into LocalDayTime
 		LocalDateTime ldt = LocalDateTime.ofInstant(last_time, ZoneId.systemDefault());
 		
@@ -27,5 +30,11 @@ public class CommandClock {
 	
 	public void setLast_time(Clock cl){
 		this.last_time=cl.instant();
+	}
+	
+	public Instant updateLast_time(){
+		// Update the time to the current time
+		this.last_time=Clock.systemUTC().instant();
+		return last_time;
 	}
 } 

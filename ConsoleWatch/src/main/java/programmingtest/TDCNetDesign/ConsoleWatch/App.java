@@ -20,8 +20,7 @@ public class App
 		
 		int i; 
 		for(i=1; i<4; i++){ 
-			//update time + print 
-			cc.setLast_time(cl);
+			//update time + print
 			cc.printClock();
 			
 			try {
