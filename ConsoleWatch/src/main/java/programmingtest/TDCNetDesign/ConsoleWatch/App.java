@@ -24,11 +24,12 @@ public class App
 			cc.printClock();
 			
 			try {
-				Thread.sleep(5000);
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				//  print out error if interrupted during sleep 
 				e.printStackTrace();
 			}
 		} 
+		System.out.println("The claim that it is a fun date today are " + cc.funDate() );
 	} 
 }
